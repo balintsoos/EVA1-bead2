@@ -2,26 +2,34 @@
 #define MINEFIELDMODEL_H
 
 #include <QObject>
+#include <QVector>
+
+#include "gamedata.h"
+#include "coordinate.h"
 
 class MinefieldModel : public QObject
 {
     Q_OBJECT
 public:
-    enum Cell { Empty, Player, Chaser, Mine };
-
     MinefieldModel(QObject *parent = 0);
+    ~MinefieldModel();
 
-    //void newGame();
-    //void step();
-    //Cell getCell(int x, int y);
+    void newGame(GameData gameData);
+    void saveGame();
+    void loadGame();
 
 signals:
-    //void gameWon();
-    //void gameOver();
-    //void cellChanged(int x, int y, Cell cell);
+    void gameWon();
+    void gameLost();
 
 private:
-    //Cell** gameTable;
+    void resetGame();
+
+    int _boardSize;
+    Coordinate _player;
+    QVector<Coordinate> _chasers;
+    QVector<Coordinate> _mines;
+
 };
 
 #endif // MINEFIELDMODEL_H

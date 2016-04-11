@@ -25,6 +25,7 @@ NewGameDialog::NewGameDialog(QWidget *parent) :
     _numberOfMinesSpinBox->setRange(1, 10);
     _numberOfMinesSpinBox->setSingleStep(1);
     _numberOfMinesSpinBox->setValue(5);
+    _numberOfMinesSpinBox->setEnabled(false); // disable spinbox
 
     // Buttons
     _startGameButton = new QPushButton(trUtf8("Start game"));

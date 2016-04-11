@@ -1,7 +1,7 @@
 #include "endgamedialog.h"
 
-EndGameDialog::EndGameDialog(QString message, QWidget *parent) :
-    _message(message), QDialog(parent)
+EndGameDialog::EndGameDialog(QWidget *parent) :
+    QDialog(parent)
 {
     // Widget
     setFixedSize(300,120);
@@ -9,7 +9,7 @@ EndGameDialog::EndGameDialog(QString message, QWidget *parent) :
     setModal(true);
 
     // Elements
-    _label = new QLabel(message);
+    _label = new QLabel();
 
     // Buttons
     _newGameButton = new QPushButton(trUtf8("New Game"));
@@ -35,8 +35,14 @@ EndGameDialog::EndGameDialog(QString message, QWidget *parent) :
     setLayout(mainLayout);
 }
 
-void EndGameDialog::setLabel(QString message)
+void EndGameDialog::won()
 {
-    _message = message;
-    _label->setText(_message);
+    _label->setText("You WON the game");
+    exec();
+}
+
+void EndGameDialog::lost()
+{
+    _label->setText("You LOST the game");
+    exec();
 }

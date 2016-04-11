@@ -20,12 +20,19 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
     connect(_newGameButton, SIGNAL(clicked()), _newGameDialog, SLOT(exec()));
 
     _saveGameButton = new QPushButton(trUtf8("Save"));
-    _saveGameButton->setEnabled(false);
+    _saveGameButton->setEnabled(false); // disable button
+    connect(_saveGameButton, SIGNAL(clicked()), this, SLOT(saveGame()));
 
     _loadGameButton = new QPushButton(trUtf8("Load"));
+    connect(_loadGameButton, SIGNAL(clicked()), this, SLOT(loadGame()));
 
     _quitButton = new QPushButton(trUtf8("Quit"));
     connect(_quitButton, SIGNAL(clicked()), this, SLOT(quitGame()));
+
+    // Model
+    _model = new MinefieldModel();
+    connect(_model, SIGNAL(gameWon()), _endGameDialog, SLOT(won()));
+    connect(_model, SIGNAL(gameLost()), _endGameDialog, SLOT(lost()));
 
     // Layout
     _vBoxLayout = new QVBoxLayout();
@@ -46,12 +53,22 @@ MinefieldWidget::~MinefieldWidget()
     delete _endGameDialog;
 }
 
+void MinefieldWidget::newGame(GameData gameData)
+{
+    _model->newGame(gameData);
+}
+
+void MinefieldWidget::saveGame()
+{
+    _model->saveGame();
+}
+
+void MinefieldWidget::loadGame()
+{
+    _model->loadGame();
+}
+
 void MinefieldWidget::quitGame()
 {
     QApplication::quit();
-}
-
-void MinefieldWidget::newGame(GameData gameData)
-{
-    _newGameButton->setText(QString::number(gameData.getBoard()));
 }

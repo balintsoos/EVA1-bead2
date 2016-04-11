@@ -9,7 +9,7 @@
 #include "newgamedialog.h"
 #include "endgamedialog.h"
 #include "gamedata.h"
-//#include "minefieldmodel.h"
+#include "minefieldmodel.h"
 
 class MinefieldWidget : public QWidget
 {
@@ -21,6 +21,8 @@ public:
 
 private slots:
     void newGame(GameData gameData);
+    void saveGame();
+    void loadGame();
     void quitGame();
 
     //void model_gameWon(MinefieldModel::Cell cell);
@@ -29,7 +31,7 @@ private slots:
 
 private:
     // Model
-    //MinefieldModel _model;
+    MinefieldModel* _model;
 
     // Dialogs
     NewGameDialog* _newGameDialog;
