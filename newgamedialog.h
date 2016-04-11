@@ -8,25 +8,40 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
+#include "gamedata.h"
+
 class NewGameDialog : public QDialog
 {
     Q_OBJECT
 public:
     explicit NewGameDialog(QWidget *parent = 0);
-    int getGridSize() { return _spinBox->value(); }
+
+signals:
+    void startNewGame(GameData gameData);
+
+private slots:
+    void sendGameData();
 
 private:
     // Elements
-    QLabel *_label;
-    QSpinBox *_spinBox;
+    QLabel *_gridSizeLabel;
+    QSpinBox *_gridSizeSpinBox;
+
+    QLabel *_numberOfChasersLabel;
+    QSpinBox *_numberOfChasersSpinBox;
+
+    QLabel *_numberOfMinesLabel;
+    QSpinBox *_numberOfMinesSpinBox;
 
     // Buttons
     QPushButton *_startGameButton;
     QPushButton *_cancelButton;
 
     // Layout
-    QHBoxLayout *upperLayout;
-    QHBoxLayout *lowerLayout;
+    QHBoxLayout *gridSizeLayout;
+    QHBoxLayout *chasersLayout;
+    QHBoxLayout *minesLayout;
+    QHBoxLayout *buttonLayout;
     QVBoxLayout *mainLayout;
 };
 

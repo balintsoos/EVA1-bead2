@@ -9,10 +9,10 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
 
     // Dialogs
     _newGameDialog = new NewGameDialog();
-    connect(_newGameDialog, SIGNAL(accepted()), this, SLOT(resizeGrid()));
+    connect(_newGameDialog, SIGNAL(startNewGame(GameData)), this, SLOT(newGame(GameData)));
 
     _endGameDialog = new EndGameDialog();
-    connect(_endGameDialog, SIGNAL(newGame()), this, SLOT(resizeGrid()));
+    connect(_endGameDialog, SIGNAL(newGame()), _newGameDialog, SLOT(exec()));
     connect(_endGameDialog, SIGNAL(quitGame()), this, SLOT(quitGame()));
 
     // Buttons
@@ -51,7 +51,7 @@ void MinefieldWidget::quitGame()
     QApplication::quit();
 }
 
-void MinefieldWidget::resizeGrid()
+void MinefieldWidget::newGame(GameData gameData)
 {
-    //TODO
+    _newGameButton->setText(QString::number(gameData.getBoard()));
 }

@@ -6,9 +6,10 @@
 #include <QGridLayout>
 #include <QVBoxLayout>
 
-//#include "minefieldmodel.h"
 #include "newgamedialog.h"
 #include "endgamedialog.h"
+#include "gamedata.h"
+//#include "minefieldmodel.h"
 
 class MinefieldWidget : public QWidget
 {
@@ -19,8 +20,8 @@ public:
     ~MinefieldWidget();
 
 private slots:
+    void newGame(GameData gameData);
     void quitGame();
-    void resizeGrid();
 
     //void model_gameWon(MinefieldModel::Cell cell);
     //void model_gameOver();

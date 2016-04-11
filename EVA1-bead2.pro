@@ -22,4 +22,5 @@ HEADERS  += minefieldwidget.h \
     minefieldmodel.h \
     coordinate.h \
     endgamedialog.h \
-    newgamedialog.h
+    newgamedialog.h \
+    gamedata.h
