@@ -15,6 +15,10 @@ public:
     void setLabel(QString message);
     void start();
 
+signals:
+    void newGame();
+    void quitGame();
+
 private:
     void updateLabel();
 

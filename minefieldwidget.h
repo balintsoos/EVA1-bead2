@@ -7,7 +7,7 @@
 
 #include <QVector>
 
-#include "minefieldmodel.h"
+//#include "minefieldmodel.h"
 #include "gridsizedialog.h"
 #include "endgamedialog.h"
 
@@ -20,9 +20,10 @@ public:
     ~MinefieldWidget();
 
 private slots:
-    //void step();
-    //void resizeGrid();
-    //void setGridSize();
+    void quitGame();
+
+    void resizeGrid();
+    void setGridSize();
 
     //void model_gameWon(MinefieldModel::Cell cell);
     //void model_gameOver();
@@ -42,9 +43,6 @@ private:
     QPushButton* _loadGameButton;
     QPushButton* _settingsButton; // átméretező gomb
     QPushButton* _quitButton;
-
-    void setGridSize();
-    void resizeGrid();
 
     //MinefieldModel _model;
 

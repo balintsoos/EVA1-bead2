@@ -12,11 +12,11 @@ EndGameDialog::EndGameDialog(QString message, QWidget *parent) :
 
     _newGameButton = new QPushButton(trUtf8("New Game"));
     _newGameButton->setFixedSize(100, 25); // a gombok mérete rögzített
+    connect(_newGameButton, SIGNAL(clicked()), this, SIGNAL(newGame()));
+
     _quitButton = new QPushButton(trUtf8("Quit"));
     _quitButton->setFixedSize(75, 25);
-
-    connect(_newGameButton, SIGNAL(clicked()), this, SLOT(accept())); // elfogadás állapota
-    connect(_quitButton, SIGNAL(clicked()), this, SLOT(reject())); // elvetés állapota
+    connect(_quitButton, SIGNAL(clicked()), this, SIGNAL(quitGame()));
 
     QVBoxLayout *upperLayout = new QVBoxLayout();
     upperLayout->addWidget(_label, 0, Qt::AlignHCenter);
