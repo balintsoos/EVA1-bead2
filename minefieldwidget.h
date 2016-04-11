@@ -2,13 +2,12 @@
 #define MINEFIELDWIDGET_H
 
 #include <QWidget>
+#include <QPushButton>
 #include <QGridLayout>
 #include <QVBoxLayout>
 
-#include <QVector>
-
 //#include "minefieldmodel.h"
-#include "gridsizedialog.h"
+#include "newgamedialog.h"
 #include "endgamedialog.h"
 
 class MinefieldWidget : public QWidget
@@ -21,31 +20,29 @@ public:
 
 private slots:
     void quitGame();
-
     void resizeGrid();
-    void setGridSize();
 
     //void model_gameWon(MinefieldModel::Cell cell);
     //void model_gameOver();
     //void model_fieldChanged(int x, int y, MinefieldModel::Cell cell);
 
 private:
-    int _gridSize;
+    // Model
+    //MinefieldModel _model;
 
-    QGridLayout* _gridLayout;
-    QVBoxLayout* _vBoxLayout;
-
-    GridSizeDialog* _gridSizeDialog; // méretbeállító ablak
+    // Dialogs
+    NewGameDialog* _newGameDialog;
     EndGameDialog* _endGameDialog;
 
+    // Buttons
     QPushButton* _newGameButton;
     QPushButton* _saveGameButton;
     QPushButton* _loadGameButton;
-    QPushButton* _settingsButton; // átméretező gomb
     QPushButton* _quitButton;
 
-    //MinefieldModel _model;
-
+    // Layout
+    QGridLayout* _gridLayout;
+    QVBoxLayout* _vBoxLayout;
 };
 
 #endif // MINEFIELDWIDGET_H

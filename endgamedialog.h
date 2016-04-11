@@ -11,21 +11,26 @@ class EndGameDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit EndGameDialog(QString message = "You won the game", QWidget *parent = 0);
+    explicit EndGameDialog(QString message = "Game Over", QWidget *parent = 0);
     void setLabel(QString message);
-    void start();
 
 signals:
     void newGame();
     void quitGame();
 
 private:
-    void updateLabel();
-
+    // Elements
     QString _message;
     QLabel *_label;
+
+    // Buttons
     QPushButton *_newGameButton;
     QPushButton *_quitButton;
+
+    // Layout
+    QVBoxLayout *upperLayout;
+    QHBoxLayout *lowerLayout;
+    QVBoxLayout *mainLayout;
 };
 
 #endif // ENDGAMEDIALOG_H

@@ -16,10 +16,10 @@ SOURCES += main.cpp\
         minefieldwidget.cpp \
     minefieldmodel.cpp \
     endgamedialog.cpp \
-    gridsizedialog.cpp
+    newgamedialog.cpp
 
 HEADERS  += minefieldwidget.h \
     minefieldmodel.h \
     coordinate.h \
     endgamedialog.h \
-    gridsizedialog.h
+    newgamedialog.h
