@@ -1,6 +1,9 @@
 #include "minefieldwidget.h"
 #include <QApplication>
 
+// for testing purposes
+#include <iostream>
+
 MinefieldWidget::MinefieldWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -71,4 +74,34 @@ void MinefieldWidget::loadGame()
 void MinefieldWidget::quitGame()
 {
     QApplication::quit();
+}
+
+void MinefieldWidget::resetGame()
+{
+
+}
+
+void MinefieldWidget::movePlayer(int direction)
+{
+    // for testing only
+    _newGameButton->setText(QString::number(direction));
+}
+
+void MinefieldWidget::keyPressEvent(QKeyEvent* event)
+{
+    switch(event->key())
+    {
+    case Qt::Key_Up :
+        movePlayer(0);
+        break;
+    case Qt::Key_Right :
+        movePlayer(1);
+        break;
+    case Qt::Key_Down :
+        movePlayer(2);
+        break;
+    case Qt::Key_Left :
+        movePlayer(3);
+        break;
+    }
 }

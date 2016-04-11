@@ -17,7 +17,7 @@ NewGameDialog::NewGameDialog(QWidget *parent) :
     _numberOfChasersLabel = new QLabel(trUtf8("Number of Chasers: "));
     _numberOfChasersSpinBox = new QSpinBox();
     _numberOfChasersSpinBox->setRange(2, 10);
-    _numberOfChasersSpinBox->setSingleStep(1);
+    _numberOfChasersSpinBox->setSingleStep(2);
     _numberOfChasersSpinBox->setEnabled(false); // disable spinbox
 
     _numberOfMinesLabel = new QLabel(trUtf8("Number of Mines: "));

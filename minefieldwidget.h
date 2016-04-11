@@ -5,11 +5,12 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QVBoxLayout>
+#include <QKeyEvent>
 
 #include "newgamedialog.h"
 #include "endgamedialog.h"
-#include "gamedata.h"
 #include "minefieldmodel.h"
+#include "gamedata.h"
 
 class MinefieldWidget : public QWidget
 {
@@ -24,10 +25,9 @@ private slots:
     void saveGame();
     void loadGame();
     void quitGame();
+    void resetGame();
 
-    //void model_gameWon(MinefieldModel::Cell cell);
-    //void model_gameOver();
-    //void model_fieldChanged(int x, int y, MinefieldModel::Cell cell);
+    void movePlayer(int direction);
 
 private:
     // Model
@@ -46,6 +46,9 @@ private:
     // Layout
     QGridLayout* _gridLayout;
     QVBoxLayout* _vBoxLayout;
+
+    // Keypress handler
+    void keyPressEvent(QKeyEvent* event);
 };
 
 #endif // MINEFIELDWIDGET_H

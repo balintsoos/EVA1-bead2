@@ -2,7 +2,7 @@
 #define MINEFIELDMODEL_H
 
 #include <QObject>
-#include <QVector>
+#include <QGenericMatrix>
 
 #include "gamedata.h"
 #include "coordinate.h"
@@ -11,24 +11,27 @@ class MinefieldModel : public QObject
 {
     Q_OBJECT
 public:
+    enum Field { Empty, Player, Chaser, Mine };
+
     MinefieldModel(QObject *parent = 0);
-    ~MinefieldModel();
 
     void newGame(GameData gameData);
     void saveGame();
     void loadGame();
+
+    Field getField(int x, int y);
 
 signals:
     void gameWon();
     void gameLost();
 
 private:
-    void resetGame();
+    Field** createGameBoard(int boardSize);
+    int random(int barrier);
+    Coordinate* generateValidRandom(int barrier);
 
     int _boardSize;
-    Coordinate _player;
-    QVector<Coordinate> _chasers;
-    QVector<Coordinate> _mines;
+    Field** _gameBoard;
 
 };
 
