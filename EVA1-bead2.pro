@@ -14,7 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         minefieldwidget.cpp \
-    minefieldmodel.cpp
+    minefieldmodel.cpp \
+    endgamedialog.cpp \
+    gridsizedialog.cpp
 
 HEADERS  += minefieldwidget.h \
-    minefieldmodel.h
+    minefieldmodel.h \
+    coordinate.h \
+    endgamedialog.h \
+    gridsizedialog.h

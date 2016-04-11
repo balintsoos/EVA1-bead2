@@ -7,16 +7,22 @@ class MinefieldModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit MinefieldModel(QObject *parent = 0);
+    enum Cell { Empty, Player, Chaser, Mine };
+
+    MinefieldModel(QObject *parent = 0);
     virtual ~MinefieldModel();
+
     void newGame();
+    void step();
+    Cell getCell(int x, int y);
 
 signals:
     void gameWon();
     void gameOver();
+    void cellChanged(int x, int y, Cell cell);
 
 private:
-    int** gameTable;
+    Cell** gameTable;
 };
 
 #endif // MINEFIELDMODEL_H
