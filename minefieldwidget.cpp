@@ -9,6 +9,7 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
 {
     // Widget
     setWindowTitle(trUtf8("Minefield Game"));
+    setMinimumWidth(350);
 
     // Dialogs
     _newGameDialog = new NewGameDialog();
@@ -61,6 +62,8 @@ void MinefieldWidget::newGame(GameData gameData)
 {
     _model->newGame(gameData);
     createGameBoard(_model->getBoardSize());
+    _saveGameButton->setEnabled(true);
+    connect(this, SIGNAL(keypress(int, int)), _model, SLOT(movePlayer(int, int)));
 }
 
 void MinefieldWidget::saveGame()
@@ -88,11 +91,47 @@ void MinefieldWidget::createGameBoard(int boardSize)
         for (int j = 0; j < boardSize; ++j)
         {
             _gameBoard[i][j]= new QPushButton(this);
-            _gameBoard[i][j]->setText("");
+            _gameBoard[i][j]->setText(getFieldValue(i + 1, j + 1));
+            _gameBoard[i][j]->setMinimumWidth(30);
+            _gameBoard[i][j]->setMinimumHeight(30);
             _gameBoard[i][j]->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
             _gameBoardLayout->addWidget(_gameBoard[i][j], i, j); // gombok felvétele az elhelyezésbe
         }
+    }
+}
+
+void MinefieldWidget::refreshGameBoard()
+{
+    int boardSize = _model->getBoardSize();
+
+    for (int i = 0; i < boardSize; ++i)
+    {
+        for (int j = 0; j < boardSize; ++j)
+        {
+            _gameBoard[i][j]->setText(getFieldValue(i + 1, j + 1));
+        }
+    }
+}
+
+QString MinefieldWidget::getFieldValue(int x, int y)
+{
+    Field field = _model->getField(x, y);
+
+    switch(field)
+    {
+    case Empty :
+        return QString::fromStdString("");
+        break;
+    case Player :
+        return QString::fromStdString("P");
+        break;
+    case Chaser :
+        return QString::fromStdString("C");
+        break;
+    case Mine :
+        return QString::fromStdString("M");
+        break;
     }
 }
 
@@ -101,16 +140,16 @@ void MinefieldWidget::keyPressEvent(QKeyEvent* event)
     switch(event->key())
     {
     case Qt::Key_Up :
-        _model->movePlayer(-1, 0);
+        emit keypress(-1, 0);
         break;
     case Qt::Key_Right :
-        _model->movePlayer(0, 1);
+        emit keypress(0, 1);
         break;
     case Qt::Key_Down :
-        _model->movePlayer(1, 0);
+        emit keypress(1, 0);
         break;
     case Qt::Key_Left :
-        _model->movePlayer(0, -1);
+        emit keypress(0, -1);
         break;
     }
 }

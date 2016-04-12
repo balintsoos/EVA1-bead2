@@ -11,7 +11,7 @@ void MinefieldModel::newGame(GameData gameData)
     _boardSize = gameData.getBoard();
     _gameBoard = createGameBoard(_boardSize);
 
-    _player = new Coordinate(1, (int)_boardSize / 2);
+    _player = new Coordinate(1, ceiling(_boardSize, 2));
     setPlayer(_player->x(), _player->y());
 
     int numberOfChasers = gameData.getChasers();
@@ -20,7 +20,7 @@ void MinefieldModel::newGame(GameData gameData)
     int lastRow = _boardSize + 1;
     int lastColumn = _boardSize;
 
-    for (int i = 1; i <= (int)numberOfChasers / 2; i++) {
+    for (int i = 1; i <= ceiling(numberOfChasers, 2); i++) {
         _gameBoard[lastRow - i][1] = Chaser;
         _gameBoard[lastRow - i][lastColumn] = Chaser;
     }
@@ -41,7 +41,7 @@ void MinefieldModel::loadGame()
 
 }
 
-MinefieldModel::Field** MinefieldModel::createGameBoard(int boardSize)
+Field** MinefieldModel::createGameBoard(int boardSize)
 {
     Field** board = new Field*[boardSize];
 
@@ -95,4 +95,9 @@ Coordinate* MinefieldModel::generateValidRandom(int barrier)
 int MinefieldModel::random(int barrier)
 {
     return (qrand() % barrier) + 1;
+}
+
+int MinefieldModel::ceiling(int number, int divider)
+{
+    return (number + divider - 1) / divider;
 }

@@ -13,6 +13,7 @@
 #include "endgamedialog.h"
 #include "minefieldmodel.h"
 #include "gamedata.h"
+#include "field.h"
 
 class MinefieldWidget : public QWidget
 {
@@ -22,6 +23,9 @@ public:
     MinefieldWidget(QWidget *parent = 0);
     ~MinefieldWidget();
 
+signals:
+    void keypress(int x, int y);
+
 private slots:
     void newGame(GameData gameData);
     void saveGame();
@@ -29,6 +33,13 @@ private slots:
     void quitGame();
 
 private:
+    void createGameBoard(int boardSize);
+    void refreshGameBoard();
+    QString getFieldValue(int x, int y);
+
+    // Keypress handler
+    void keyPressEvent(QKeyEvent* event);
+
     // Model
     MinefieldModel* _model;
 
@@ -47,11 +58,6 @@ private:
     // Layout
     QVBoxLayout* _vBoxLayout;
     QGridLayout* _gameBoardLayout;
-
-    void createGameBoard(int boardSize);
-
-    // Keypress handler
-    void keyPressEvent(QKeyEvent* event);
 };
 
 #endif // MINEFIELDWIDGET_H

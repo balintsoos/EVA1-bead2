@@ -5,34 +5,36 @@
 
 #include "gamedata.h"
 #include "coordinate.h"
+#include "field.h"
 
 class MinefieldModel : public QObject
 {
     Q_OBJECT
 public:
-    enum Field { Empty, Player, Chaser, Mine };
-
     MinefieldModel(QObject *parent = 0);
 
     void newGame(GameData gameData);
     void saveGame();
     void loadGame();
-
-    void movePlayer(int x, int y);
     int getBoardSize() { return _boardSize; }
-
-    //Field getField(int x, int y);
+    Field getField(int x, int y) { return _gameBoard[x][y]; }
 
 signals:
     void gameWon();
     void gameLost();
     void refresh();
 
+public slots:
+    void movePlayer(int x, int y);
+
 private:
     Field** createGameBoard(int boardSize);
-    void setPlayer(int x, int y);
-    int random(int barrier);
     Coordinate* generateValidRandom(int barrier);
+    void setPlayer(int x, int y);
+
+    // Helper functions
+    int random(int barrier);
+    int ceiling(int number, int divider);
 
     int _boardSize;
     Coordinate* _player;
