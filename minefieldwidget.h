@@ -31,10 +31,10 @@ private slots:
     void saveGame();
     void loadGame();
     void quitGame();
+    void refreshGameBoard();
 
 private:
     void createGameBoard(int boardSize);
-    void refreshGameBoard();
     QString getFieldValue(int x, int y);
 
     // Keypress handler

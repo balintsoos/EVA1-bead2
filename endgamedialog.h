@@ -19,7 +19,13 @@ public slots:
 
 signals:
     void newGame();
+    void loadGame();
     void quitGame();
+
+private slots:
+    void start();
+    void load();
+    void quit();
 
 private:
     // Elements
@@ -27,6 +33,7 @@ private:
 
     // Buttons
     QPushButton *_newGameButton;
+    QPushButton *_loadGameButton;
     QPushButton *_quitButton;
 
     // Layout

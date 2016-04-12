@@ -14,11 +14,15 @@ EndGameDialog::EndGameDialog(QWidget *parent) :
     // Buttons
     _newGameButton = new QPushButton(trUtf8("New Game"));
     _newGameButton->setFixedSize(100, 25); // a gombok mérete rögzített
-    connect(_newGameButton, SIGNAL(clicked()), this, SIGNAL(newGame()));
+    connect(_newGameButton, SIGNAL(clicked()), this, SLOT(start()));
+
+    _loadGameButton = new QPushButton(trUtf8("Load"));
+    _loadGameButton->setFixedSize(75, 25);
+    connect(_loadGameButton, SIGNAL(clicked()), this, SLOT(load()));
 
     _quitButton = new QPushButton(trUtf8("Quit"));
     _quitButton->setFixedSize(75, 25);
-    connect(_quitButton, SIGNAL(clicked()), this, SIGNAL(quitGame()));
+    connect(_quitButton, SIGNAL(clicked()), this, SLOT(quit()));
 
     // Layout
     upperLayout = new QVBoxLayout();
@@ -26,6 +30,7 @@ EndGameDialog::EndGameDialog(QWidget *parent) :
 
     lowerLayout = new QHBoxLayout();
     lowerLayout->addWidget(_newGameButton);
+    lowerLayout->addWidget(_loadGameButton);
     lowerLayout->addWidget(_quitButton);
 
     mainLayout = new QVBoxLayout();
@@ -37,12 +42,30 @@ EndGameDialog::EndGameDialog(QWidget *parent) :
 
 void EndGameDialog::won()
 {
-    _label->setText("You WON the game");
+    _label->setText("You won the game");
     exec();
 }
 
 void EndGameDialog::lost()
 {
-    _label->setText("You LOST the game");
+    _label->setText("You lost the game");
     exec();
+}
+
+void EndGameDialog::start()
+{
+    emit newGame();
+    close();
+}
+
+void EndGameDialog::load()
+{
+    emit loadGame();
+    close();
+}
+
+void EndGameDialog::quit()
+{
+    emit quitGame();
+    close();
 }

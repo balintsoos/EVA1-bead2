@@ -65,8 +65,18 @@ void MinefieldModel::movePlayer(int x, int y)
     if (newX >= 1 && newX <= _boardSize &&
         newY >= 1 && newY <= _boardSize)
     {
-        setPlayer(newX, newY);
+        if (_gameBoard[newX][newY] != Empty)
+        {
+            emit gameLost();
+        }
+        else
+        {
+            setPlayer(newX, newY);
+        }
+
     }
+
+    emit refresh();
 }
 
 void MinefieldModel::setPlayer(int x, int y)
@@ -75,6 +85,113 @@ void MinefieldModel::setPlayer(int x, int y)
     _player->x(x);
     _player->y(y);
     _gameBoard[_player->x()][_player->y()] = Player;
+}
+
+void MinefieldModel::moveChasers()
+{
+    QVector<Coordinate*> chasers = getChasers();
+    QVector<Coordinate*> mines = getMines();
+
+    foreach (Coordinate* chaser, chasers) {
+        int x = chaser->x();
+        int y = chaser->y();
+        int newX, newY;
+
+        if (x > _player->x()) {
+            newX = x - 1;
+        }
+        if (x < _player->x()) {
+            newX = x + 1;
+        }
+        if (y > _player->y()) {
+            newY = y - 1;
+        }
+        if (y < _player->y()) {
+            newY = y + 1;
+        }
+
+
+
+        chaser->x(newX);
+        chaser->y(newY);
+    }
+
+    checkCollisions(chasers, mines);
+    emit refresh();
+}
+
+void MinefieldModel::checkCollisions(QVector<Coordinate*> chasers, QVector<Coordinate*> mines)
+{
+    for (int i = 0; i < chasers.length(); i++)
+    {
+        int x = chasers[i]->x();
+        int y = chasers[i]->y();
+
+        if (x == _player->x() && y == _player->y())
+        {
+            emit gameLost();
+        }
+
+        bool isCollide = false;
+
+        foreach (Coordinate* mine, mines)
+        {
+            if (x == mine->x() && y == mine->y())
+            {
+                isCollide = true;
+            }
+        }
+
+        for (int j = 0; j < chasers.length(); j++)
+        {
+            if (j != i && x == chasers[j]->x() && y == chasers[j]->y())
+            {
+                isCollide = true;
+            }
+        }
+
+        if (!isCollide)
+        {
+            _gameBoard[x][y] = Chaser;
+        }
+    }
+}
+
+QVector<Coordinate*> MinefieldModel::getChasers()
+{
+    QVector<Coordinate*> chasers;
+
+    for (int x = 1; x <= _boardSize; ++x)
+    {
+        for (int y = 1; y <= _boardSize; ++y)
+        {
+            if (_gameBoard[x][y] == Chaser)
+            {
+                chasers.push_back(new Coordinate(x, y));
+                _gameBoard[x][y] = Empty;
+            }
+        }
+    }
+
+    return chasers;
+}
+
+QVector<Coordinate*> MinefieldModel::getMines()
+{
+    QVector<Coordinate*> mines;
+
+    for (int x = 1; x <= _boardSize; ++x)
+    {
+        for (int y = 1; y <= _boardSize; ++y)
+        {
+            if (_gameBoard[x][y] == Mine)
+            {
+                mines.push_back(new Coordinate(x, y));
+            }
+        }
+    }
+
+    return mines;
 }
 
 Coordinate* MinefieldModel::generateValidRandom(int barrier)

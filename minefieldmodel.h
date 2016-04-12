@@ -2,6 +2,7 @@
 #define MINEFIELDMODEL_H
 
 #include <QObject>
+#include <QVector>
 
 #include "gamedata.h"
 #include "coordinate.h"
@@ -27,7 +28,13 @@ signals:
 public slots:
     void movePlayer(int x, int y);
 
+private slots:
+    void moveChasers();
+
 private:
+    QVector<Coordinate *> getChasers();
+    QVector<Coordinate *> getMines();
+    void checkCollisions(QVector<Coordinate*> chasers, QVector<Coordinate*> mines);
     Field** createGameBoard(int boardSize);
     Coordinate* generateValidRandom(int barrier);
     void setPlayer(int x, int y);

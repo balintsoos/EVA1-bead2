@@ -17,6 +17,7 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
 
     _endGameDialog = new EndGameDialog();
     connect(_endGameDialog, SIGNAL(newGame()), _newGameDialog, SLOT(exec()));
+    connect(_endGameDialog, SIGNAL(newGame()), this, SLOT(loadGame()));
     connect(_endGameDialog, SIGNAL(quitGame()), this, SLOT(quitGame()));
 
     // Buttons
@@ -33,13 +34,11 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
     _quitButton = new QPushButton(trUtf8("Quit"));
     connect(_quitButton, SIGNAL(clicked()), this, SLOT(quitGame()));
 
-    // Model
-    _model = new MinefieldModel();
-    connect(_model, SIGNAL(gameWon()), _endGameDialog, SLOT(won()));
-    connect(_model, SIGNAL(gameLost()), _endGameDialog, SLOT(lost()));
-
     // Gameboard
     _gameBoardLayout = new QGridLayout();
+
+    // Model
+    _model = new MinefieldModel();
 
     // Layout
     _vBoxLayout = new QVBoxLayout();
@@ -60,10 +59,19 @@ MinefieldWidget::~MinefieldWidget()
 
 void MinefieldWidget::newGame(GameData gameData)
 {
+    delete _model;
+
+    // Model
+    _model = new MinefieldModel();
     _model->newGame(gameData);
+
+    connect(_model, SIGNAL(gameWon()), _endGameDialog, SLOT(won()));
+    connect(_model, SIGNAL(gameLost()), _endGameDialog, SLOT(lost()));
+    connect(_model, SIGNAL(refresh()), this, SLOT(refreshGameBoard()));
+    connect(this, SIGNAL(keypress(int, int)), _model, SLOT(movePlayer(int, int)));
+
     createGameBoard(_model->getBoardSize());
     _saveGameButton->setEnabled(true);
-    connect(this, SIGNAL(keypress(int, int)), _model, SLOT(movePlayer(int, int)));
 }
 
 void MinefieldWidget::saveGame()
