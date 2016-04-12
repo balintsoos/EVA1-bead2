@@ -3,11 +3,12 @@
 MinefieldModel::MinefieldModel(QObject *parent)
     : QObject(parent)
 {
-
+    _timer = new QTimer();
+    connect(_timer, SIGNAL(timeout()), this, SLOT(moveChasers()));
 }
 
 void MinefieldModel::newGame(GameData gameData)
-{
+{   
     _boardSize = gameData.getBoard();
     _gameBoard = createGameBoard(_boardSize);
 
@@ -29,6 +30,8 @@ void MinefieldModel::newGame(GameData gameData)
         Coordinate* mine = generateValidRandom(_boardSize);
         _gameBoard[mine->x()][mine->y()] = Mine;
     }
+
+    _timer->start(1000);
 }
 
 void MinefieldModel::saveGame()
@@ -68,6 +71,7 @@ void MinefieldModel::movePlayer(int x, int y)
         if (_gameBoard[newX][newY] != Empty)
         {
             emit gameLost();
+            _timer->stop();
         }
         else
         {
@@ -110,8 +114,6 @@ void MinefieldModel::moveChasers()
             newY = y + 1;
         }
 
-
-
         chaser->x(newX);
         chaser->y(newY);
     }
@@ -130,6 +132,7 @@ void MinefieldModel::checkCollisions(QVector<Coordinate*> chasers, QVector<Coord
         if (x == _player->x() && y == _player->y())
         {
             emit gameLost();
+            _timer->stop();
         }
 
         bool isCollide = false;

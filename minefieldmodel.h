@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QVector>
+#include <QTimer>
 
 #include "gamedata.h"
 #include "coordinate.h"
@@ -46,6 +47,7 @@ private:
     int _boardSize;
     Coordinate* _player;
     Field** _gameBoard;
+    QTimer* _timer;
 
 };
 
