@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QVector>
 #include <QTimer>
+#include <QTime>
 
 #include "gamedata.h"
 #include "coordinate.h"

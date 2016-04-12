@@ -70,5 +70,5 @@ void NewGameDialog::sendGameData()
     gameData.setMines(_numberOfMinesSpinBox->value());
 
     emit startNewGame(gameData);
-    this->close();
+    close();
 }
