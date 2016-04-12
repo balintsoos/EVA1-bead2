@@ -120,7 +120,8 @@ void MinefieldModel::moveChasers()
     foreach (Coordinate* chaser, chasers) {
         int x = chaser->x();
         int y = chaser->y();
-        int newX, newY;
+        int newX =x;
+        int newY =y;
 
         if (x > _player->x()) {
             newX = x - 1;

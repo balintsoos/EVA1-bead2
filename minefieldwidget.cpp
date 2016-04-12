@@ -22,16 +22,20 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
 
     // Buttons
     _newGameButton = new QPushButton(trUtf8("New Game"));
+    _newGameButton->setFocusPolicy(Qt::NoFocus);
     connect(_newGameButton, SIGNAL(clicked()), _newGameDialog, SLOT(show()));
 
     _saveGameButton = new QPushButton(trUtf8("Save"));
+    _saveGameButton->setFocusPolicy(Qt::NoFocus);
     _saveGameButton->setEnabled(false); // disable button
     connect(_saveGameButton, SIGNAL(clicked()), this, SLOT(saveGame()));
 
     _loadGameButton = new QPushButton(trUtf8("Load"));
+    _loadGameButton->setFocusPolicy(Qt::NoFocus);
     connect(_loadGameButton, SIGNAL(clicked()), this, SLOT(loadGame()));
 
     _quitButton = new QPushButton(trUtf8("Quit"));
+    _quitButton->setFocusPolicy(Qt::NoFocus);
     connect(_quitButton, SIGNAL(clicked()), this, SLOT(quitGame()));
 
     // Gameboard
@@ -96,6 +100,7 @@ void MinefieldWidget::createGameBoard(int boardSize)
         for (int j = 0; j < boardSize; ++j)
         {
             _gameBoard[i][j]= new QPushButton(this);
+            _gameBoard[i][j]->setFocusPolicy(Qt::NoFocus);
             _gameBoard[i][j]->setText(getFieldValue(i + 1, j + 1));
             _gameBoard[i][j]->setMinimumWidth(30);
             _gameBoard[i][j]->setMinimumHeight(30);
