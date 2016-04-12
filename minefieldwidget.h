@@ -3,8 +3,10 @@
 
 #include <QWidget>
 #include <QPushButton>
+#include <QVector>
 #include <QGridLayout>
 #include <QVBoxLayout>
+#include <QGridLayout>
 #include <QKeyEvent>
 
 #include "newgamedialog.h"
@@ -25,7 +27,6 @@ private slots:
     void saveGame();
     void loadGame();
     void quitGame();
-    void resetGame();
 
 private:
     // Model
@@ -41,9 +42,13 @@ private:
     QPushButton* _loadGameButton;
     QPushButton* _quitButton;
 
+    QVector<QVector<QPushButton*>> _gameBoard;
+
     // Layout
-    QGridLayout* _gridLayout;
     QVBoxLayout* _vBoxLayout;
+    QGridLayout* _gameBoardLayout;
+
+    void createGameBoard(int boardSize);
 
     // Keypress handler
     void keyPressEvent(QKeyEvent* event);

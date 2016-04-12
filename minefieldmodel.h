@@ -2,7 +2,6 @@
 #define MINEFIELDMODEL_H
 
 #include <QObject>
-#include <QGenericMatrix>
 
 #include "gamedata.h"
 #include "coordinate.h"
@@ -20,12 +19,14 @@ public:
     void loadGame();
 
     void movePlayer(int x, int y);
+    int getBoardSize() { return _boardSize; }
 
     //Field getField(int x, int y);
 
 signals:
     void gameWon();
     void gameLost();
+    void refresh();
 
 private:
     Field** createGameBoard(int boardSize);

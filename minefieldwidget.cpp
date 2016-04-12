@@ -37,15 +37,16 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
     connect(_model, SIGNAL(gameWon()), _endGameDialog, SLOT(won()));
     connect(_model, SIGNAL(gameLost()), _endGameDialog, SLOT(lost()));
 
+    // Gameboard
+    _gameBoardLayout = new QGridLayout();
+
     // Layout
     _vBoxLayout = new QVBoxLayout();
     _vBoxLayout->addWidget(_newGameButton);
     _vBoxLayout->addWidget(_saveGameButton);
     _vBoxLayout->addWidget(_loadGameButton);
     _vBoxLayout->addWidget(_quitButton);
-
-    _gridLayout = new QGridLayout();
-    _vBoxLayout->addLayout(_gridLayout);
+    _vBoxLayout->addLayout(_gameBoardLayout);
 
     setLayout(_vBoxLayout);
 }
@@ -59,6 +60,7 @@ MinefieldWidget::~MinefieldWidget()
 void MinefieldWidget::newGame(GameData gameData)
 {
     _model->newGame(gameData);
+    createGameBoard(_model->getBoardSize());
 }
 
 void MinefieldWidget::saveGame()
@@ -76,9 +78,22 @@ void MinefieldWidget::quitGame()
     QApplication::quit();
 }
 
-void MinefieldWidget::resetGame()
+void MinefieldWidget::createGameBoard(int boardSize)
 {
+    _gameBoard.resize(boardSize);
 
+    for (int i = 0; i < boardSize; ++i)
+    {
+        _gameBoard[i].resize(boardSize);
+        for (int j = 0; j < boardSize; ++j)
+        {
+            _gameBoard[i][j]= new QPushButton(this);
+            _gameBoard[i][j]->setText("");
+            _gameBoard[i][j]->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+
+            _gameBoardLayout->addWidget(_gameBoard[i][j], i, j); // gombok felvétele az elhelyezésbe
+        }
+    }
 }
 
 void MinefieldWidget::keyPressEvent(QKeyEvent* event)
