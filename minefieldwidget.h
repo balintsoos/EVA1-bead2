@@ -27,8 +27,6 @@ private slots:
     void quitGame();
     void resetGame();
 
-    void movePlayer(int direction);
-
 private:
     // Model
     MinefieldModel* _model;

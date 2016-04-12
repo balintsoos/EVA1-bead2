@@ -81,27 +81,21 @@ void MinefieldWidget::resetGame()
 
 }
 
-void MinefieldWidget::movePlayer(int direction)
-{
-    // for testing only
-    _newGameButton->setText(QString::number(direction));
-}
-
 void MinefieldWidget::keyPressEvent(QKeyEvent* event)
 {
     switch(event->key())
     {
     case Qt::Key_Up :
-        movePlayer(0);
+        _model->movePlayer(-1, 0);
         break;
     case Qt::Key_Right :
-        movePlayer(1);
+        _model->movePlayer(0, 1);
         break;
     case Qt::Key_Down :
-        movePlayer(2);
+        _model->movePlayer(1, 0);
         break;
     case Qt::Key_Left :
-        movePlayer(3);
+        _model->movePlayer(0, -1);
         break;
     }
 }

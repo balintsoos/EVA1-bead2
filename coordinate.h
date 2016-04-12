@@ -9,6 +9,9 @@ public:
     int x() { return _x; }
     int y() { return _y; }
 
+    void x(int newX) { _x = newX; }
+    void y(int newY) { _y = newY; }
+
 private:
     int _x;
     int _y;

@@ -19,7 +19,9 @@ public:
     void saveGame();
     void loadGame();
 
-    Field getField(int x, int y);
+    void movePlayer(int x, int y);
+
+    //Field getField(int x, int y);
 
 signals:
     void gameWon();
@@ -27,10 +29,12 @@ signals:
 
 private:
     Field** createGameBoard(int boardSize);
+    void setPlayer(int x, int y);
     int random(int barrier);
     Coordinate* generateValidRandom(int barrier);
 
     int _boardSize;
+    Coordinate* _player;
     Field** _gameBoard;
 
 };
