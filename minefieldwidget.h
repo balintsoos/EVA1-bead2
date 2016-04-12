@@ -53,7 +53,7 @@ private:
     QPushButton* _loadGameButton;
     QPushButton* _quitButton;
 
-    QVector<QVector<QPushButton*>> _gameBoard;
+    QVector<QVector<QPushButton*> > _gameBoard;
 
     // Layout
     QVBoxLayout* _vBoxLayout;
