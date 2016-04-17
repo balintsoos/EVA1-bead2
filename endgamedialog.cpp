@@ -43,13 +43,13 @@ EndGameDialog::EndGameDialog(QWidget *parent) :
 void EndGameDialog::won()
 {
     _label->setText("You won the game");
-    exec();
+    show();
 }
 
 void EndGameDialog::lost()
 {
     _label->setText("You lost the game");
-    exec();
+    show();
 }
 
 void EndGameDialog::start()

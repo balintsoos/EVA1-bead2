@@ -1,9 +1,6 @@
 #include "minefieldwidget.h"
 #include <QApplication>
 
-// for testing purposes
-#include <iostream>
-
 MinefieldWidget::MinefieldWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -16,22 +13,26 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
     connect(_newGameDialog, SIGNAL(startNewGame(GameData)), this, SLOT(newGame(GameData)));
 
     _endGameDialog = new EndGameDialog();
-    connect(_endGameDialog, SIGNAL(newGame()), _newGameDialog, SLOT(exec()));
-    connect(_endGameDialog, SIGNAL(newGame()), this, SLOT(loadGame()));
+    connect(_endGameDialog, SIGNAL(newGame()), _newGameDialog, SLOT(show()));
+    connect(_endGameDialog, SIGNAL(loadGame()), this, SLOT(loadGame()));
     connect(_endGameDialog, SIGNAL(quitGame()), this, SLOT(quitGame()));
 
     // Buttons
     _newGameButton = new QPushButton(trUtf8("New Game"));
-    connect(_newGameButton, SIGNAL(clicked()), _newGameDialog, SLOT(exec()));
+    _newGameButton->setFocusPolicy(Qt::NoFocus);
+    connect(_newGameButton, SIGNAL(clicked()), _newGameDialog, SLOT(show()));
 
     _saveGameButton = new QPushButton(trUtf8("Save"));
+    _saveGameButton->setFocusPolicy(Qt::NoFocus);
     _saveGameButton->setEnabled(false); // disable button
     connect(_saveGameButton, SIGNAL(clicked()), this, SLOT(saveGame()));
 
     _loadGameButton = new QPushButton(trUtf8("Load"));
+    _loadGameButton->setFocusPolicy(Qt::NoFocus);
     connect(_loadGameButton, SIGNAL(clicked()), this, SLOT(loadGame()));
 
     _quitButton = new QPushButton(trUtf8("Quit"));
+    _quitButton->setFocusPolicy(Qt::NoFocus);
     connect(_quitButton, SIGNAL(clicked()), this, SLOT(quitGame()));
 
     // Gameboard
@@ -39,6 +40,10 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
 
     // Model
     _model = new MinefieldModel();
+    connect(_model, SIGNAL(gameWon()), _endGameDialog, SLOT(won()));
+    connect(_model, SIGNAL(gameLost()), _endGameDialog, SLOT(lost()));
+    connect(_model, SIGNAL(refresh()), this, SLOT(refreshGameBoard()));
+    connect(this, SIGNAL(keypress(int, int)), _model, SLOT(movePlayer(int, int)));
 
     // Layout
     _vBoxLayout = new QVBoxLayout();
@@ -59,17 +64,7 @@ MinefieldWidget::~MinefieldWidget()
 
 void MinefieldWidget::newGame(GameData gameData)
 {
-    delete _model;
-
-    // Model
-    _model = new MinefieldModel();
     _model->newGame(gameData);
-
-    connect(_model, SIGNAL(gameWon()), _endGameDialog, SLOT(won()));
-    connect(_model, SIGNAL(gameLost()), _endGameDialog, SLOT(lost()));
-    connect(_model, SIGNAL(refresh()), this, SLOT(refreshGameBoard()));
-    connect(this, SIGNAL(keypress(int, int)), _model, SLOT(movePlayer(int, int)));
-
     createGameBoard(_model->getBoardSize());
     _saveGameButton->setEnabled(true);
 }
@@ -90,16 +85,25 @@ void MinefieldWidget::quitGame()
 }
 
 void MinefieldWidget::createGameBoard(int boardSize)
-{
+{   
+    foreach(QVector<QPushButton*> row, _gameBoard)
+    {
+        qDeleteAll(row.begin(), row.end());
+        row.clear();
+    }
+
+    _gameBoard.clear();
     _gameBoard.resize(boardSize);
 
     for (int i = 0; i < boardSize; ++i)
     {
+        _gameBoard[i].clear();
         _gameBoard[i].resize(boardSize);
         for (int j = 0; j < boardSize; ++j)
         {
             _gameBoard[i][j]= new QPushButton(this);
-            _gameBoard[i][j]->setText(getFieldValue(i + 1, j + 1));
+            _gameBoard[i][j]->setFocusPolicy(Qt::NoFocus);
+            _gameBoard[i][j]->setText(getFieldValue(i, j));
             _gameBoard[i][j]->setMinimumWidth(30);
             _gameBoard[i][j]->setMinimumHeight(30);
             _gameBoard[i][j]->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
@@ -117,7 +121,7 @@ void MinefieldWidget::refreshGameBoard()
     {
         for (int j = 0; j < boardSize; ++j)
         {
-            _gameBoard[i][j]->setText(getFieldValue(i + 1, j + 1));
+            _gameBoard[i][j]->setText(getFieldValue(i, j));
         }
     }
 }
