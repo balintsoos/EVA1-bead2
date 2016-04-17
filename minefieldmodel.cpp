@@ -1,8 +1,5 @@
 #include "minefieldmodel.h"
 
-// for testing purposes
-#include <iostream>
-
 MinefieldModel::MinefieldModel(QObject *parent)
     : QObject(parent)
 {

@@ -1,9 +1,6 @@
 #include "minefieldwidget.h"
 #include <QApplication>
 
-// for testing purposes
-#include <iostream>
-
 MinefieldWidget::MinefieldWidget(QWidget *parent)
     : QWidget(parent)
 {
