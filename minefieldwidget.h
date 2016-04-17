@@ -35,9 +35,12 @@ private slots:
     void quitGame();
     void won();
     void lost();
+    void pauseHandler();
     void refreshGameBoard();
 
 private:
+    void pauseGame();
+    void resumeGame();
     void createGameBoard(int boardSize);
     QString getFieldValue(int x, int y);
 
@@ -54,11 +57,15 @@ private:
     // Chasers' timer
     QTimer* _timer;
 
+    // Pause
+    bool _gamePaused = false;
+
     // Buttons
     QPushButton* _newGameButton;
     QPushButton* _saveGameButton;
     QPushButton* _loadGameButton;
     QPushButton* _quitButton;
+    QPushButton* _pauseButton;
 
     QVector<QVector<QPushButton*> > _gameBoard;
 

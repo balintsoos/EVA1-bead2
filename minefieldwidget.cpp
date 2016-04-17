@@ -35,6 +35,11 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
     _quitButton->setFocusPolicy(Qt::NoFocus);
     connect(_quitButton, SIGNAL(clicked()), this, SLOT(quitGame()));
 
+    _pauseButton = new QPushButton(trUtf8("Pause"));
+    _pauseButton->setFocusPolicy(Qt::NoFocus);
+    _pauseButton->setEnabled(false);
+    connect(_pauseButton, SIGNAL(clicked()), this, SLOT(pauseHandler()));
+
     // Gameboard
     _gameBoardLayout = new QGridLayout();
 
@@ -55,6 +60,7 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
     _vBoxLayout->addWidget(_saveGameButton);
     _vBoxLayout->addWidget(_loadGameButton);
     _vBoxLayout->addWidget(_quitButton);
+    _vBoxLayout->addWidget(_pauseButton);
     _vBoxLayout->addLayout(_gameBoardLayout);
 
     setLayout(_vBoxLayout);
@@ -70,8 +76,11 @@ void MinefieldWidget::newGame(GameData gameData)
 {
     _model->newGame(gameData);
     createGameBoard(_model->getBoardSize());
+
     _saveGameButton->setEnabled(true);
-    _timer->start(1000);
+    _pauseButton->setEnabled(true);
+
+    resumeGame();
 }
 
 void MinefieldWidget::saveGame()
@@ -87,6 +96,28 @@ void MinefieldWidget::loadGame()
 void MinefieldWidget::quitGame()
 {
     QApplication::quit();
+}
+
+void MinefieldWidget::pauseHandler()
+{
+    _gamePaused ? resumeGame() : pauseGame();
+}
+
+void MinefieldWidget::pauseGame()
+{
+    _gamePaused = true;
+    _pauseButton->setText("Resume");
+    if(_timer->isActive())
+    {
+        _timer->stop();
+    }
+}
+
+void MinefieldWidget::resumeGame()
+{
+    _gamePaused = false;
+    _pauseButton->setText("Pause");
+    _timer->start(1000);
 }
 
 void MinefieldWidget::won()
@@ -172,19 +203,22 @@ QString MinefieldWidget::getFieldValue(int x, int y)
 
 void MinefieldWidget::keyPressEvent(QKeyEvent* event)
 {
-    switch(event->key())
+    if (!_gamePaused)
     {
-    case Qt::Key_Up :
-        emit keypress(-1, 0);
-        break;
-    case Qt::Key_Right :
-        emit keypress(0, 1);
-        break;
-    case Qt::Key_Down :
-        emit keypress(1, 0);
-        break;
-    case Qt::Key_Left :
-        emit keypress(0, -1);
-        break;
+        switch(event->key())
+        {
+        case Qt::Key_Up :
+            emit keypress(-1, 0);
+            break;
+        case Qt::Key_Right :
+            emit keypress(0, 1);
+            break;
+        case Qt::Key_Down :
+            emit keypress(1, 0);
+            break;
+        case Qt::Key_Left :
+            emit keypress(0, -1);
+            break;
+        }
     }
 }
