@@ -17,7 +17,7 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
 
     _endGameDialog = new EndGameDialog();
     connect(_endGameDialog, SIGNAL(newGame()), _newGameDialog, SLOT(show()));
-    connect(_endGameDialog, SIGNAL(newGame()), this, SLOT(loadGame()));
+    connect(_endGameDialog, SIGNAL(loadGame()), this, SLOT(loadGame()));
     connect(_endGameDialog, SIGNAL(quitGame()), this, SLOT(quitGame()));
 
     // Buttons
@@ -68,7 +68,6 @@ MinefieldWidget::~MinefieldWidget()
 void MinefieldWidget::newGame(GameData gameData)
 {
     _model->newGame(gameData);
-
     createGameBoard(_model->getBoardSize());
     _saveGameButton->setEnabled(true);
 }
@@ -90,6 +89,12 @@ void MinefieldWidget::quitGame()
 
 void MinefieldWidget::createGameBoard(int boardSize)
 {   
+    foreach(QVector<QPushButton*> row, _gameBoard)
+    {
+        qDeleteAll(row.begin(), row.end());
+        row.clear();
+    }
+
     _gameBoard.clear();
     _gameBoard.resize(boardSize);
 
@@ -101,7 +106,7 @@ void MinefieldWidget::createGameBoard(int boardSize)
         {
             _gameBoard[i][j]= new QPushButton(this);
             _gameBoard[i][j]->setFocusPolicy(Qt::NoFocus);
-            _gameBoard[i][j]->setText(getFieldValue(i + 1, j + 1));
+            _gameBoard[i][j]->setText(getFieldValue(i, j));
             _gameBoard[i][j]->setMinimumWidth(30);
             _gameBoard[i][j]->setMinimumHeight(30);
             _gameBoard[i][j]->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
@@ -119,7 +124,7 @@ void MinefieldWidget::refreshGameBoard()
     {
         for (int j = 0; j < boardSize; ++j)
         {
-            _gameBoard[i][j]->setText(getFieldValue(i + 1, j + 1));
+            _gameBoard[i][j]->setText(getFieldValue(i, j));
         }
     }
 }

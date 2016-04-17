@@ -1,5 +1,8 @@
 #include "minefieldmodel.h"
 
+// for testing purposes
+#include <iostream>
+
 MinefieldModel::MinefieldModel(QObject *parent)
     : QObject(parent)
 {
@@ -18,19 +21,15 @@ void MinefieldModel::newGame(GameData gameData)
     _boardSize = gameData.getBoard();
     _gameBoard = createGameBoard(_boardSize);
 
-    _player = new Coordinate(1, ceiling(_boardSize, 2));
+    int numberOfMines = gameData.getMines();
+    int lastRow = _boardSize - 1;
+    int lastColumn = _boardSize - 1;
+
+    _player = new Coordinate(0, qCeil(lastColumn / 2.0));
     setPlayer(_player->x(), _player->y());
 
-    int numberOfChasers = gameData.getChasers();
-    int numberOfMines = gameData.getMines();
-
-    int lastRow = _boardSize + 1;
-    int lastColumn = _boardSize;
-
-    for (int i = 1; i <= ceiling(numberOfChasers, 2); i++) {
-        _gameBoard[lastRow - i][1] = Chaser;
-        _gameBoard[lastRow - i][lastColumn] = Chaser;
-    }
+    _gameBoard[lastRow][0] = Chaser;
+    _gameBoard[lastRow][lastColumn] = Chaser;
 
     for (int i = 1; i <= numberOfMines; i++) {
         Coordinate* mine = generateValidRandom(_boardSize);
@@ -54,10 +53,10 @@ Field** MinefieldModel::createGameBoard(int boardSize)
 {
     Field** board = new Field*[boardSize];
 
-    for (int i = 1; i <= boardSize; ++i)
+    for (int i = 0; i < boardSize; ++i)
     {
         board[i] = new Field[boardSize];
-        for (int j = 1; j <= boardSize; ++j)
+        for (int j = 0; j < boardSize; ++j)
         {
             board[i][j] = Empty;
         }
@@ -71,8 +70,8 @@ void MinefieldModel::movePlayer(int x, int y)
     int newX = _player->x() + x;
     int newY = _player->y() + y;
 
-    if (newX >= 1 && newX <= _boardSize &&
-        newY >= 1 && newY <= _boardSize)
+    if (newX >= 0 && newX < _boardSize &&
+        newY >= 0 && newY < _boardSize)
     {
         if (_gameBoard[newX][newY] != Empty)
         {
@@ -80,7 +79,6 @@ void MinefieldModel::movePlayer(int x, int y)
             {
                 _timer->stop();
             }
-            qDebug("lol");
             emit gameLost();
             return;
         }
@@ -120,8 +118,8 @@ void MinefieldModel::moveChasers()
     foreach (Coordinate* chaser, chasers) {
         int x = chaser->x();
         int y = chaser->y();
-        int newX =x;
-        int newY =y;
+        int newX = x;
+        int newY = y;
 
         if (x > _player->x()) {
             newX = x - 1;
@@ -141,6 +139,7 @@ void MinefieldModel::moveChasers()
     }
 
     checkCollisions(chasers, mines);
+
     foreach (Coordinate* chaser, chasers) {
         delete chaser;
     }
@@ -200,9 +199,9 @@ QVector<Coordinate*> MinefieldModel::getChasers()
 {
     QVector<Coordinate*> chasers;
 
-    for (int x = 1; x <= _boardSize; ++x)
+    for (int x = 0; x < _boardSize; ++x)
     {
-        for (int y = 1; y <= _boardSize; ++y)
+        for (int y = 0; y < _boardSize; ++y)
         {
             if (_gameBoard[x][y] == Chaser)
             {
@@ -219,9 +218,9 @@ QVector<Coordinate*> MinefieldModel::getMines()
 {
     QVector<Coordinate*> mines;
 
-    for (int x = 1; x <= _boardSize; ++x)
+    for (int x = 0; x < _boardSize; ++x)
     {
-        for (int y = 1; y <= _boardSize; ++y)
+        for (int y = 0; y < _boardSize; ++y)
         {
             if (_gameBoard[x][y] == Mine)
             {
@@ -250,10 +249,5 @@ Coordinate* MinefieldModel::generateValidRandom(int barrier)
 
 int MinefieldModel::random(int barrier)
 {
-    return (qrand() % barrier) + 1;
-}
-
-int MinefieldModel::ceiling(int number, int divider)
-{
-    return (number + divider - 1) / divider;
+    return (qrand() % barrier);
 }

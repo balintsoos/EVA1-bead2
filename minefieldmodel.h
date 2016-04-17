@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QTimer>
 #include <QTime>
+#include <QtMath>
 
 #include "gamedata.h"
 #include "coordinate.h"
@@ -43,7 +44,6 @@ private:
 
     // Helper functions
     int random(int barrier);
-    int ceiling(int number, int divider);
 
     int _boardSize;
     Coordinate* _player;
