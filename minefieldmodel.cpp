@@ -4,17 +4,10 @@ MinefieldModel::MinefieldModel(QObject *parent)
     : QObject(parent)
 {
     qsrand(QTime::currentTime().msec());
-    _timer = new QTimer();
-    connect(_timer, SIGNAL(timeout()), this, SLOT(moveChasers()));
 }
 
 void MinefieldModel::newGame(GameData gameData)
-{   
-    if (_timer->isActive())
-    {
-        _timer->stop();
-    }
-
+{
     _boardSize = gameData.getBoard();
     _gameBoard = createGameBoard(_boardSize);
 
@@ -32,8 +25,6 @@ void MinefieldModel::newGame(GameData gameData)
         Coordinate* mine = generateValidRandom(_boardSize);
         _gameBoard[mine->x()][mine->y()] = Mine;
     }
-
-    _timer->start(1000);
 }
 
 void MinefieldModel::saveGame()
@@ -72,10 +63,6 @@ void MinefieldModel::movePlayer(int x, int y)
     {
         if (_gameBoard[newX][newY] != Empty)
         {
-            if(_timer->isActive())
-            {
-                _timer->stop();
-            }
             emit gameLost();
             return;
         }
@@ -104,10 +91,6 @@ void MinefieldModel::moveChasers()
 
     if (chasers.length() == 0)
     {
-        if(_timer->isActive())
-        {
-            _timer->stop();
-        }
         emit gameWon();
         return;
     }
@@ -159,10 +142,6 @@ void MinefieldModel::checkCollisions(QVector<Coordinate*> chasers, QVector<Coord
 
         if (x == _player->x() && y == _player->y())
         {
-            if(_timer->isActive())
-            {
-                _timer->stop();
-            }
             emit gameLost();
             return;
         }

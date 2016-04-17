@@ -40,10 +40,14 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
 
     // Model
     _model = new MinefieldModel();
-    connect(_model, SIGNAL(gameWon()), _endGameDialog, SLOT(won()));
-    connect(_model, SIGNAL(gameLost()), _endGameDialog, SLOT(lost()));
+    connect(_model, SIGNAL(gameWon()), this, SLOT(won()));
+    connect(_model, SIGNAL(gameLost()), this, SLOT(lost()));
     connect(_model, SIGNAL(refresh()), this, SLOT(refreshGameBoard()));
     connect(this, SIGNAL(keypress(int, int)), _model, SLOT(movePlayer(int, int)));
+
+    // Chasers' timer
+    _timer = new QTimer();
+    connect(_timer, SIGNAL(timeout()), _model, SLOT(moveChasers()));
 
     // Layout
     _vBoxLayout = new QVBoxLayout();
@@ -67,6 +71,7 @@ void MinefieldWidget::newGame(GameData gameData)
     _model->newGame(gameData);
     createGameBoard(_model->getBoardSize());
     _saveGameButton->setEnabled(true);
+    _timer->start(1000);
 }
 
 void MinefieldWidget::saveGame()
@@ -82,6 +87,24 @@ void MinefieldWidget::loadGame()
 void MinefieldWidget::quitGame()
 {
     QApplication::quit();
+}
+
+void MinefieldWidget::won()
+{
+    if(_timer->isActive())
+    {
+        _timer->stop();
+    }
+    _endGameDialog->won();
+}
+
+void MinefieldWidget::lost()
+{
+    if(_timer->isActive())
+    {
+        _timer->stop();
+    }
+    _endGameDialog->lost();
 }
 
 void MinefieldWidget::createGameBoard(int boardSize)

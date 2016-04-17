@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QKeyEvent>
+#include <QTimer>
 
 #include "newgamedialog.h"
 #include "endgamedialog.h"
@@ -25,12 +26,15 @@ public:
 
 signals:
     void keypress(int x, int y);
+    void moveChasers();
 
 private slots:
     void newGame(GameData gameData);
     void saveGame();
     void loadGame();
     void quitGame();
+    void won();
+    void lost();
     void refreshGameBoard();
 
 private:
@@ -46,6 +50,9 @@ private:
     // Dialogs
     NewGameDialog* _newGameDialog;
     EndGameDialog* _endGameDialog;
+
+    // Chasers' timer
+    QTimer* _timer;
 
     // Buttons
     QPushButton* _newGameButton;

@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QVector>
-#include <QTimer>
 #include <QTime>
 #include <QtMath>
 
@@ -30,8 +29,6 @@ signals:
 
 public slots:
     void movePlayer(int x, int y);
-
-private slots:
     void moveChasers();
 
 private:
@@ -48,8 +45,6 @@ private:
     int _boardSize;
     Coordinate* _player;
     Field** _gameBoard;
-    QTimer* _timer;
-
 };
 
 #endif // MINEFIELDMODEL_H
