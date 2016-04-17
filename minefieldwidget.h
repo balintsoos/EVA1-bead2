@@ -9,6 +9,8 @@
 #include <QGridLayout>
 #include <QKeyEvent>
 #include <QTimer>
+#include <QTime>
+#include <QLabel>
 
 #include "newgamedialog.h"
 #include "endgamedialog.h"
@@ -37,6 +39,7 @@ private slots:
     void lost();
     void pauseHandler();
     void refreshGameBoard();
+    void refreshGameTime();
 
 private:
     void pauseGame();
@@ -55,7 +58,10 @@ private:
     EndGameDialog* _endGameDialog;
 
     // Chasers' timer
-    QTimer* _timer;
+    QTimer* _chaserTimer;
+
+    // elapsed game time
+    QTime* _gameTime;
 
     // Pause
     bool _gamePaused = false;
@@ -67,6 +73,10 @@ private:
     QPushButton* _quitButton;
     QPushButton* _pauseButton;
 
+    // Labels
+    QLabel* _gameTimeLabel;
+
+    // Gameboard
     QVector<QVector<QPushButton*> > _gameBoard;
 
     // Layout

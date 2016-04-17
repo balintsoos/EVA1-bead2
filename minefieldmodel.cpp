@@ -70,7 +70,6 @@ void MinefieldModel::movePlayer(int x, int y)
         {
             setPlayer(newX, newY);
         }
-
     }
 
     emit refresh();

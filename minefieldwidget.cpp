@@ -40,6 +40,11 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
     _pauseButton->setEnabled(false);
     connect(_pauseButton, SIGNAL(clicked()), this, SLOT(pauseHandler()));
 
+    // Labels
+    _gameTimeLabel = new QLabel();
+    _gameTimeLabel->setFixedHeight(15);
+    _gameTimeLabel->setAlignment(Qt::AlignHCenter);
+
     // Gameboard
     _gameBoardLayout = new QGridLayout();
 
@@ -51,8 +56,9 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
     connect(this, SIGNAL(keypress(int, int)), _model, SLOT(movePlayer(int, int)));
 
     // Chasers' timer
-    _timer = new QTimer();
-    connect(_timer, SIGNAL(timeout()), _model, SLOT(moveChasers()));
+    _chaserTimer = new QTimer();
+    connect(_chaserTimer, SIGNAL(timeout()), _model, SLOT(moveChasers()));
+    connect(_chaserTimer, SIGNAL(timeout()), this, SLOT(refreshGameTime()));
 
     // Layout
     _vBoxLayout = new QVBoxLayout();
@@ -60,7 +66,6 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
     _vBoxLayout->addWidget(_saveGameButton);
     _vBoxLayout->addWidget(_loadGameButton);
     _vBoxLayout->addWidget(_quitButton);
-    _vBoxLayout->addWidget(_pauseButton);
     _vBoxLayout->addLayout(_gameBoardLayout);
 
     setLayout(_vBoxLayout);
@@ -77,8 +82,12 @@ void MinefieldWidget::newGame(GameData gameData)
     _model->newGame(gameData);
     createGameBoard(_model->getBoardSize());
 
+    //_gameTime->start();
+
     _saveGameButton->setEnabled(true);
     _pauseButton->setEnabled(true);
+    _vBoxLayout->addWidget(_gameTimeLabel);
+    _vBoxLayout->addWidget(_pauseButton);
 
     resumeGame();
 }
@@ -107,9 +116,9 @@ void MinefieldWidget::pauseGame()
 {
     _gamePaused = true;
     _pauseButton->setText("Resume");
-    if(_timer->isActive())
+    if(_chaserTimer->isActive())
     {
-        _timer->stop();
+        _chaserTimer->stop();
     }
 }
 
@@ -117,24 +126,18 @@ void MinefieldWidget::resumeGame()
 {
     _gamePaused = false;
     _pauseButton->setText("Pause");
-    _timer->start(1000);
+    _chaserTimer->start(1000);
 }
 
 void MinefieldWidget::won()
 {
-    if(_timer->isActive())
-    {
-        _timer->stop();
-    }
+    pauseGame();
     _endGameDialog->won();
 }
 
 void MinefieldWidget::lost()
 {
-    if(_timer->isActive())
-    {
-        _timer->stop();
-    }
+    pauseGame();
     _endGameDialog->lost();
 }
 
@@ -178,6 +181,15 @@ void MinefieldWidget::refreshGameBoard()
             _gameBoard[i][j]->setText(getFieldValue(i, j));
         }
     }
+}
+
+void MinefieldWidget::refreshGameTime()
+{
+    QTime currentTime = (QTime::currentTime());
+    QString time = currentTime.toString("hh:mm:ss");
+
+    //QString time = _gameTime->toString("hh:mm:ss");
+    _gameTimeLabel->setText(time);
 }
 
 QString MinefieldWidget::getFieldValue(int x, int y)
