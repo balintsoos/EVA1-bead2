@@ -9,7 +9,6 @@
 #include <QGridLayout>
 #include <QKeyEvent>
 #include <QTimer>
-#include <QTime>
 #include <QLabel>
 
 #include "newgamedialog.h"
@@ -61,7 +60,7 @@ private:
     QTimer* _chaserTimer;
 
     // elapsed game time
-    QTime* _gameTime;
+    int _gameTime = 0;
 
     // Pause
     bool _gamePaused = false;

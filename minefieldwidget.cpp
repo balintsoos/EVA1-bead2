@@ -82,7 +82,7 @@ void MinefieldWidget::newGame(GameData gameData)
     _model->newGame(gameData);
     createGameBoard(_model->getBoardSize());
 
-    //_gameTime->start();
+    _gameTime = 0;
 
     _saveGameButton->setEnabled(true);
     _pauseButton->setEnabled(true);
@@ -185,11 +185,8 @@ void MinefieldWidget::refreshGameBoard()
 
 void MinefieldWidget::refreshGameTime()
 {
-    QTime currentTime = (QTime::currentTime());
-    QString time = currentTime.toString("hh:mm:ss");
-
-    //QString time = _gameTime->toString("hh:mm:ss");
-    _gameTimeLabel->setText(time);
+    QString time = QString::number(++_gameTime);
+    _gameTimeLabel->setText("Time: " + time + " sec");
 }
 
 QString MinefieldWidget::getFieldValue(int x, int y)
