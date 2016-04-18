@@ -94,11 +94,32 @@ void MinefieldWidget::newGame(GameData gameData)
 
 void MinefieldWidget::saveGame()
 {
-    _model->saveGame();
+    pauseGame();
+
+    QString fileName = QFileDialog::getSaveFileName(this, "Save Game", "savegame.json", "JSON (*.json)");
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly))
+    {
+        return;
+    }
+
+    QJsonObject jsonObject = _model->saveGame();
+    jsonObject["timer"] = _gameTime;
+
+    QJsonDocument jsonDoc(jsonObject);
+
+    file.write(jsonDoc.toJson());
+    file.close();
 }
 
 void MinefieldWidget::loadGame()
 {
+    pauseGame();
     _model->loadGame();
 }
 

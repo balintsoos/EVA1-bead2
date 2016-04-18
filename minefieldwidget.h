@@ -10,6 +10,10 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <QLabel>
+#include <QFileDialog>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QFile>
 
 #include "newgamedialog.h"
 #include "endgamedialog.h"

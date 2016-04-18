@@ -5,6 +5,8 @@
 #include <QVector>
 #include <QTime>
 #include <QtMath>
+#include <QJsonObject>
+#include <QJsonArray>
 
 #include "gamedata.h"
 #include "coordinate.h"
@@ -17,7 +19,7 @@ public:
     MinefieldModel(QObject *parent = 0);
 
     void newGame(GameData gameData);
-    void saveGame();
+    QJsonObject saveGame();
     void loadGame();
     int getBoardSize() { return _boardSize; }
     Field getField(int x, int y) { return _gameBoard[x][y]; }
@@ -38,6 +40,11 @@ private:
     Field** createGameBoard(int boardSize);
     Coordinate* generateValidRandom(int barrier);
     void setPlayer(int x, int y);
+    void savePlayerToJson(QJsonObject &json);
+    void saveBoardToJson(QJsonObject &json);
+    QJsonArray saveChasersToJson();
+    QJsonArray saveMinesToJson();
+
 
     // Helper functions
     int random(int barrier);

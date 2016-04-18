@@ -27,9 +27,70 @@ void MinefieldModel::newGame(GameData gameData)
     }
 }
 
-void MinefieldModel::saveGame()
+QJsonObject MinefieldModel::saveGame()
 {
+    QJsonObject json;
 
+    savePlayerToJson(json);
+    saveBoardToJson(json);
+
+    return json;
+}
+
+void MinefieldModel::savePlayerToJson(QJsonObject &json)
+{
+    QJsonObject player;
+
+    player["x"] = _player->x();
+    player["y"] = _player->y();
+
+    json["player"] = player;
+}
+
+void MinefieldModel::saveBoardToJson(QJsonObject &json)
+{
+    QJsonObject board;
+
+    QJsonArray chasers = saveChasersToJson();
+    QJsonArray mines = saveMinesToJson();
+
+    board["chasers"] = chasers;
+    board["mines"] = mines;
+    board["size"] = _boardSize;
+
+    json["board"] = board;
+}
+
+QJsonArray MinefieldModel::saveChasersToJson()
+{
+    QJsonArray chasersArray;
+    QVector<Coordinate*> chasersVector = getChasers();
+
+    foreach(Coordinate* chaserItem, chasersVector)
+    {
+        QJsonObject chaser;
+        chaser["x"] = chaserItem->x();
+        chaser["y"] = chaserItem->y();
+        chasersArray.push_back(chaser);
+    }
+
+    return chasersArray;
+}
+
+QJsonArray MinefieldModel::saveMinesToJson()
+{
+    QJsonArray minesArray;
+    QVector<Coordinate*> minesVector = getMines();
+
+    foreach(Coordinate* mineItem, minesVector)
+    {
+        QJsonObject mine;
+        mine["x"] = mineItem->x();
+        mine["y"] = mineItem->y();
+        minesArray.push_back(mine);
+    }
+
+    return minesArray;
 }
 
 void MinefieldModel::loadGame()
