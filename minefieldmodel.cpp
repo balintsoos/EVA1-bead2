@@ -93,9 +93,30 @@ QJsonArray MinefieldModel::saveMinesToJson()
     return minesArray;
 }
 
-void MinefieldModel::loadGame()
+void MinefieldModel::loadGame(QJsonObject json)
 {
+    QJsonObject board = json["board"].toObject();
+    QJsonObject player = json["player"].toObject();
+    QJsonArray chasers = board["chasers"].toArray();
+    QJsonArray mines = board["mines"].toArray();
 
+    _boardSize = board["size"].toInt();
+    _gameBoard = createGameBoard(_boardSize);
+
+    _player = new Coordinate(player["x"].toInt(), player["y"].toInt());
+    setPlayer(_player->x(), _player->y());
+
+    foreach(QJsonValue jsonItem, chasers)
+    {
+        QJsonObject item = jsonItem.toObject();
+        _gameBoard[item["x"].toInt()][item["y"].toInt()] = Chaser;
+    }
+
+    foreach(QJsonValue jsonItem, mines)
+    {
+        QJsonObject item = jsonItem.toObject();
+        _gameBoard[item["x"].toInt()][item["y"].toInt()] = Mine;
+    }
 }
 
 Field** MinefieldModel::createGameBoard(int boardSize)
@@ -112,6 +133,14 @@ Field** MinefieldModel::createGameBoard(int boardSize)
     }
 
     return board;
+}
+
+void MinefieldModel::setPlayer(int x, int y)
+{
+    _gameBoard[_player->x()][_player->y()] = Empty;
+    _player->x(x);
+    _player->y(y);
+    _gameBoard[_player->x()][_player->y()] = Player;
 }
 
 void MinefieldModel::movePlayer(int x, int y)
@@ -134,14 +163,6 @@ void MinefieldModel::movePlayer(int x, int y)
     }
 
     emit refresh();
-}
-
-void MinefieldModel::setPlayer(int x, int y)
-{
-    _gameBoard[_player->x()][_player->y()] = Empty;
-    _player->x(x);
-    _player->y(y);
-    _gameBoard[_player->x()][_player->y()] = Player;
 }
 
 void MinefieldModel::moveChasers()

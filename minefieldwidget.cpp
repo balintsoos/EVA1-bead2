@@ -80,23 +80,16 @@ MinefieldWidget::~MinefieldWidget()
 void MinefieldWidget::newGame(GameData gameData)
 {
     _model->newGame(gameData);
-    createGameBoard(_model->getBoardSize());
-
     _gameTime = 0;
 
-    _saveGameButton->setEnabled(true);
-    _pauseButton->setEnabled(true);
-    _vBoxLayout->addWidget(_gameTimeLabel);
-    _vBoxLayout->addWidget(_pauseButton);
-
-    resumeGame();
+    initGame();
 }
 
 void MinefieldWidget::saveGame()
 {
     pauseGame();
 
-    QString fileName = QFileDialog::getSaveFileName(this, "Save Game", "savegame.json", "JSON (*.json)");
+    QString fileName = QFileDialog::getSaveFileName(this, "Save game", "savegame.json", "JSON (*.json)");
     if (fileName.isEmpty())
     {
         return;
@@ -120,7 +113,41 @@ void MinefieldWidget::saveGame()
 void MinefieldWidget::loadGame()
 {
     pauseGame();
-    _model->loadGame();
+
+    QString fileName = QFileDialog::getOpenFileName(this, "Load game", "savegame.json", "JSON (*.json)");
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+
+    QFile loadFile(fileName);
+    if (!loadFile.open(QIODevice::ReadOnly))
+    {
+        return;
+    }
+
+    QByteArray saveData = loadFile.readAll();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+
+    QJsonObject json = loadDoc.object();
+    _model->loadGame(json);
+    _gameTime = json["timer"].toInt();
+
+    initGame();
+}
+
+void MinefieldWidget::initGame()
+{
+    createGameBoard(_model->getBoardSize());
+
+    _saveGameButton->setEnabled(true);
+    _pauseButton->setEnabled(true);
+
+    _vBoxLayout->addWidget(_gameTimeLabel);
+    _vBoxLayout->addWidget(_pauseButton);
+
+    resumeGame();
 }
 
 void MinefieldWidget::quitGame()

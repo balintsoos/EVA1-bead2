@@ -37,6 +37,7 @@ private slots:
     void newGame(GameData gameData);
     void saveGame();
     void loadGame();
+    void initGame();
     void quitGame();
     void won();
     void lost();

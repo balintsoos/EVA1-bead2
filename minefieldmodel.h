@@ -20,7 +20,7 @@ public:
 
     void newGame(GameData gameData);
     QJsonObject saveGame();
-    void loadGame();
+    void loadGame(QJsonObject json);
     int getBoardSize() { return _boardSize; }
     Field getField(int x, int y) { return _gameBoard[x][y]; }
 
