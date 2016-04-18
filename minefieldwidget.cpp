@@ -58,7 +58,7 @@ MinefieldWidget::MinefieldWidget(QWidget *parent)
     // Chasers' timer
     _chaserTimer = new QTimer();
     connect(_chaserTimer, SIGNAL(timeout()), _model, SLOT(moveChasers()));
-    connect(_chaserTimer, SIGNAL(timeout()), this, SLOT(refreshGameTime()));
+    connect(_chaserTimer, SIGNAL(timeout()), this, SLOT(increaseGameTime()));
 
     // Layout
     _vBoxLayout = new QVBoxLayout();
@@ -83,6 +83,7 @@ void MinefieldWidget::newGame(GameData gameData)
     _gameTime = 0;
 
     initGame();
+    resumeGame();
 }
 
 void MinefieldWidget::saveGame()
@@ -135,6 +136,7 @@ void MinefieldWidget::loadGame()
     _gameTime = json["timer"].toInt();
 
     initGame();
+    refreshGameTime();
 }
 
 void MinefieldWidget::initGame()
@@ -146,8 +148,6 @@ void MinefieldWidget::initGame()
 
     _vBoxLayout->addWidget(_gameTimeLabel);
     _vBoxLayout->addWidget(_pauseButton);
-
-    resumeGame();
 }
 
 void MinefieldWidget::quitGame()
@@ -231,9 +231,15 @@ void MinefieldWidget::refreshGameBoard()
     }
 }
 
+void MinefieldWidget::increaseGameTime()
+{
+    _gameTime++;
+    refreshGameTime();
+}
+
 void MinefieldWidget::refreshGameTime()
 {
-    QString time = QString::number(++_gameTime);
+    QString time = QString::number(_gameTime);
     _gameTimeLabel->setText("Time: " + time + " sec");
 }
 

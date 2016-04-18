@@ -35,6 +35,7 @@ public slots:
 
 private:
     QVector<Coordinate *> getChasers();
+    QVector<Coordinate *> getAndRemoveChasers();
     QVector<Coordinate *> getMines();
     void checkCollisions(QVector<Coordinate*> chasers, QVector<Coordinate*> mines);
     Field** createGameBoard(int boardSize);

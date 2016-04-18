@@ -167,7 +167,7 @@ void MinefieldModel::movePlayer(int x, int y)
 
 void MinefieldModel::moveChasers()
 {
-    QVector<Coordinate*> chasers = getChasers();
+    QVector<Coordinate*> chasers = getAndRemoveChasers();
     QVector<Coordinate*> mines = getMines();
 
     if (chasers.length() == 0)
@@ -253,6 +253,24 @@ void MinefieldModel::checkCollisions(QVector<Coordinate*> chasers, QVector<Coord
 }
 
 QVector<Coordinate*> MinefieldModel::getChasers()
+{
+    QVector<Coordinate*> chasers;
+
+    for (int x = 0; x < _boardSize; ++x)
+    {
+        for (int y = 0; y < _boardSize; ++y)
+        {
+            if (_gameBoard[x][y] == Chaser)
+            {
+                chasers.push_back(new Coordinate(x, y));
+            }
+        }
+    }
+
+    return chasers;
+}
+
+QVector<Coordinate*> MinefieldModel::getAndRemoveChasers()
 {
     QVector<Coordinate*> chasers;
 

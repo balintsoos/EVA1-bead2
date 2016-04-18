@@ -44,6 +44,7 @@ private slots:
     void pauseHandler();
     void refreshGameBoard();
     void refreshGameTime();
+    void increaseGameTime();
 
 private:
     void pauseGame();
